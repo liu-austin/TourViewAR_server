@@ -3,7 +3,12 @@ const { Pool, Client } = require("pg");
 const connectionLocation = `postgres://${process.env.PGUSER}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
 // const connectionLocation = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
 const db = new Pool({
-  connectionString: connectionLocation
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+  port: process.env.PGPORT,
+  host: process.env.PGHOST,
+  ssl: true
 });
 
 db.connect()

@@ -7,21 +7,37 @@ module.exports = {
       if (err) {
         callback(err);
       } else {
-        console.log(results.rows[0].id)
-        db.query(`INSERT INTO Tours (pano_photos, id_user, tour_name) VALUES ('{${results.rows[0].id}}', ${req.body.id_user}, $$${req.body.tour_name}$$) RETURNING id`, (err, results) => {
-          if (err) {
-            callback(err);
-          } else {
-            db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
-              if (err) {
-                callback(err);
-              } else {
-                console.log(`successful created new tour`);
-                callback(null, results);
-              }
-            });
-          }
-        });
+        if (req.body.location) {
+          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, latitude, longitude) VALUES ('{${results.rows[0].id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, ${req.body.latitude}, ${req.body.longitude}) RETURNING id`, (err, results) => {
+            if (err) {
+              callback(err);
+            } else {
+              db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
+                if (err) {
+                  callback(err);
+                } else {
+                  console.log(`successful created new tour`);
+                  callback(null, results);
+                }
+              });
+            }
+          });
+        } else {
+          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name) VALUES ('{${results.rows[0].id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$) RETURNING id`, (err, results) => {
+            if (err) {
+              callback(err);
+            } else {
+              db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
+                if (err) {
+                  callback(err);
+                } else {
+                  console.log(`successful created new tour`);
+                  callback(null, results);
+                }
+              });
+            }
+          });
+        }
       }
     });
   },
@@ -31,7 +47,7 @@ module.exports = {
       if (err) {
         callback(err);
       } else {
-        db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}')`, (err, results) => {
+        db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}') WHERE id = ${req.body.id}`, (err, results) => {
           if (err) {
             callback(err);
           } else {

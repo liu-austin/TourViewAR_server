@@ -15,7 +15,12 @@ CREATE TABLE Users (
 
 CREATE TABLE Tours (
   id serial primary key,
+  linked_img_url varchar(255),
+  pic_url varchar(255),
+  latitude numeric(10, 5),
+  longitude numeric(10, 5),
   tour_name varchar(255),
+  skybox_photos int[],
   pano_photos int[],
   id_user int references Users (id)
 )
@@ -25,11 +30,17 @@ CREATE TABLE Panos (
   img_url varchar(255)
 )
 
+CREATE TABLE Skyboxs (
+  id serial primary key,
+  img_index int
+)
+
 CREATE TABLE Objects (
   id serial primary key,
   x decimal,
   y decimal,
   object_value varchar(255),
   scale decimal[],
-  id_pano int references Panos (id)
+  id_pano int references Panos (id),
+  id_skybox int references Skyboxs (id)
 )
