@@ -15,6 +15,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Tours (
   id serial not null,
+  tour_name varchar(255),
   pano_photos int[],
   id_user int
 )
@@ -30,11 +31,5 @@ CREATE TABLE Objects (
 
 CREATE TABLE Panos (
   id int,
-  img_url varchar(255)
-)
-
-CREATE TABLE ObjectImages (
-  id int,
-  id_obj int,
   img_url varchar(255)
 )
