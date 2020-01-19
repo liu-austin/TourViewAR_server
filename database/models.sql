@@ -5,7 +5,7 @@ CREATE DATABASE tourmvp;
 \c tourmvp;
 
 CREATE TABLE Users (
-  id serial unique,
+  id serial primary key,
   email varchar(255),
   username varchar(255),
   pw varchar(255),
@@ -14,19 +14,19 @@ CREATE TABLE Users (
 )
 
 CREATE TABLE Tours (
-  id serial unique,
+  id serial primary key,
   tour_name varchar(255),
   pano_photos int[],
   id_user int references Users (id)
 )
 
 CREATE TABLE Panos (
-  id serial unique,
+  id serial primary key,
   img_url varchar(255)
 )
 
 CREATE TABLE Objects (
-  id serial unique,
+  id serial primary key,
   x decimal,
   y decimal,
   object_value varchar(255),

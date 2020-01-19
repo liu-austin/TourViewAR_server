@@ -6,7 +6,7 @@ router
   .get(controller.getUser)
 
 router
-  .route("signup")
+  .route("/signup")
   .post(controller.createUser)
 
 router
@@ -15,12 +15,15 @@ router
 
 router
   .route("/tours/:id_user")
-  .get(controller.getToursByUser)
+  .get(controller.getToursByUser);
 
 router
   .route("/scenes")
-  .get(controller.getScenes)
   .post(controller.addScene);
+
+router
+  .route("/scenes/:id_tour")
+  .get(controller.getScenes)
 
 router  
   .route("/objects/:id_pano")
@@ -48,5 +51,9 @@ router
 router
   .route('/getpresignedurlforobject/:bucket')
   .get(controller.getUrlInsertDbForObject);
+
+router
+  .route('/search')
+  .get(controller.searchTours);
 
 module.exports = router;

@@ -44,7 +44,7 @@ module.exports = {
 
   getScenes: (req, res) => {
     console.log(`you're in controller.getScenes`);
-    db.helper.getScenes(req, (err, results) => {
+    dbhelper.getScenes(req, (err, results) => {
       if (err) {
         console.log(err);
         res.status(404).send(`error in controller.getScenes`);
@@ -120,7 +120,7 @@ module.exports = {
 
   getUrlInsertDb: (req, res) => {
     console.log(`you're in controller.getUrlInsertDb`);
-    s3UploadHelper(req, (err, results) => {
+    s3UploadHelper.getCountThenUrl(req, (err, results) => {
       if (err) {
         res.status(400).send(err);
       } else {
@@ -130,7 +130,7 @@ module.exports = {
   },
   getUrlInsertDbForObject: (req, res) => {
     console.log(`you're in controller.getUrlInsertDbForObject`);
-    s3UploadHelper(req, (err, results) => {
+    s3UploadHelper.getCountThenUrlForObject(req, (err, results) => {
       if (err) {
         res.status(400).send(err);
       } else {
@@ -175,6 +175,17 @@ module.exports = {
   getObjectsByScene: (req, res) => {
     console.log(`you're in controller.getObjectsByScene`);
     dbhelper.getObjectsByScene(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  searchTours: (req, res) => {
+    console.log(`you're in controller.searchTours`);
+    dbhelper.searchTours(req, (err, results) => {
       if (err) {
         res.status(400).send(err);
       } else {

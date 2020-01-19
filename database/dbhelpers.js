@@ -1,22 +1,23 @@
-const db = require('../server/index.js')
+const db = require('../database/index');
 
 module.exports = {
 
   createNewTour: (req, callback) => {
-    db.query(`INSERT INTO Panos (img_url) VALUES (${req.body.img_url}) RETURNING id;`, (err, results) => {
+    db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
       if (err) {
-        callback(err)
+        callback(err);
       } else {
-        db.query(`INSERT INTO Tours (pano_photos, id_user) VALUES (${results.rows[0].id}, ${req.body.id_user}) RETURNING id`, (err, results) => {
+        console.log(results.rows[0].id)
+        db.query(`INSERT INTO Tours (pano_photos, id_user, tour_name) VALUES ('{${results.rows[0].id}}', ${req.body.id_user}, $$${req.body.tour_name}$$) RETURNING id`, (err, results) => {
           if (err) {
             callback(err);
           } else {
-            db.query(`UPDATE Users SET array_cat(created_tours, {${results.rows[0].id}});`, (err,results) => {
+            db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
               if (err) {
-                callback(err)
+                callback(err);
               } else {
-                console.log(`successful created new tour`)
-                callback(null, {message: "A new tour has been successfully created."})
+                console.log(`successful created new tour`);
+                callback(null, results);
               }
             });
           }
@@ -26,16 +27,16 @@ module.exports = {
   },
 
   addScene: (req, callback) => {
-    db.query(`INSERT INTO Panos (img_url) VALUES (${req.body.img_url}) RETURNING id;`, (err, results) => {
+    db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
       if (err) {
         callback(err);
       } else {
-        db.query(`UPDATE Tours SET array_cat(pano_photos, {${results.rows[0].id}})`, (err, results) => {
+        db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}')`, (err, results) => {
           if (err) {
             callback(err);
           } else {
             console.log(`successful created new scene`);
-            callback(null, {message: "A new scene has been successfully created."});
+            callback(null, results);
           }
         });
       }
@@ -43,7 +44,7 @@ module.exports = {
   },
 
   getToursByUser: (req, callback) => {
-    db.query(`SELECT * FROM Tour WHERE id_user = ${req.params.id_user};`, (err, results) => {
+    db.query(`SELECT * FROM Tours WHERE id_user = ${req.params.id_user};`, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -53,7 +54,7 @@ module.exports = {
   },
 
   getScenes: (req, callback) => {
-    db.query(`SELECT * from Panos WHERE id in (SELECT pano_photos from Tours WHERE id = ${req.params.id_tour})`, (err, results) => {
+    db.query(`SELECT * from Panos WHERE id = ANY (SELECT unnest(pano_photos) from Tours WHERE id = ${req.params.id_tour})`, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -63,7 +64,7 @@ module.exports = {
   },
 
   addObject: (req, callback) => {
-    db.query(`INSERT INTO Objects (x, y, object_value, scale, id_pano) VALUES (0, 0, '${req.body.object_value}', '{1, 1, 1}', ${req.body.id_pano});`, (err, results) => {
+    db.query(`INSERT INTO Objects (x, y, object_value, scale, id_pano) VALUES (0, 0, $$${req.body.object_value}$$, '{1, 1, 1}', ${req.body.id_pano});`, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -73,7 +74,7 @@ module.exports = {
   },
 
   updateObject: (req, callback) => {
-    db.query(`UPDATE Objects SET x=${req.body.x}, y=${req.body.y}, scale='{${req.body.x}, ${req.body.y}, ${req.body.z}}' where id=${req.body.id_object};`, (err, results) => {
+    db.query(`UPDATE Objects SET x=${req.body.x}, y=${req.body.y}, scale='{${req.body.scalex}, ${req.body.scaley}, ${req.body.scalez}}' where id=${req.body.id_object};`, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -93,7 +94,7 @@ module.exports = {
   },
 
   deleteTourById: (req, callback) => {
-    db.query(`DELETE FROM Tour WHERE tour_id=${req.params.id};`, (err, results) => {
+    db.query(`DELETE FROM Tours WHERE id=${req.params.id};`, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -113,7 +114,7 @@ module.exports = {
   },
 
   createUser: (req, callback) => {
-    db.query(`INSERT INTO Users (username, pw, email) VALUES ("${req.body.username}", "${req.body.pw}", "${req.body.email}")`, (err, results) => {
+    db.query(`INSERT INTO Users (username, pw, email) VALUES ($$${req.body.username}$$, $$${req.body.pw}$$, $$${req.body.email}$$)`, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -124,12 +125,12 @@ module.exports = {
 
   searchTours: (req, callback) => {
     let results = [];
-    db.query(`SELECT * FROM Tours WHERE tour_name SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, tours) => {
+    db.query(`SELECT * FROM Tours INNER JOIN Users On Tours.id_user = Users.id WHERE tour_name SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)}%)' LIMIT 5;`, (err, tours) => {
       if (err) {
         callback(err);
       }
       results.push(tours.rows);
-      db.query(`SELECT * FROM Tours INNER JOIN Users ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, userTours) => {
+      db.query(`SELECT * FROM Tours INNER JOIN Users ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)}%)' LIMIT 5;`, (err, userTours) => {
         if (err) {
           callback(err);
         }
@@ -139,4 +140,3 @@ module.exports = {
     });
   }
 };
-
