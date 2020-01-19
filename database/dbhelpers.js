@@ -124,12 +124,18 @@ module.exports = {
 
   searchTours: (req, callback) => {
     let results = [];
-    db.query(`SELECT * FROM Tour WHERE tour_name SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, tours) => {
+    db.query(`SELECT * FROM Tours WHERE tour_name SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, tours) => {
       if (err) {
         callback(err);
       }
       results.push(tours.rows);
-      db.query(`SELECT * FROM Tour WHERE `)
+      db.query(`SELECT * FROM Tours INNER JOIN Tours ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, userTours) => {
+        if (err) {
+          callback(err);
+        }
+        results.push(userTours.rows);
+        callback(null, results);
+      });
     });
   }
 };
