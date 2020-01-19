@@ -17,7 +17,7 @@ CREATE TABLE Tours (
   id serial not null,
   tour_name varchar(255),
   pano_photos int[],
-  id_user int
+  id_user int references Users (id)
 )
 
 CREATE TABLE Objects (
