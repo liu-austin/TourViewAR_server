@@ -24,7 +24,7 @@ You'll need an ARCore compatible device - you can find a list of them here: <br 
 
 You can download the apk here: [ViewTourAR](https://www.dropbox.com/s/3zuzo7d45yrhcrd/buildandgo-app-release.apk?dl=0)
 
-### Running on iOS X & Android through Viromedia Testbed App
+### Running on iOS X & Android through Viro Media Testbed App
 
 1. Download Viro Media <br />
 2. Open Viro Media and navigate to menu <br />
