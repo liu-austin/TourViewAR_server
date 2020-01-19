@@ -41,7 +41,7 @@ module.exports = {
       }
     });
   },
-  
+
   getToursByUser: (req, callback) => {
     db.query(`SELECT * FROM Tour WHERE id_user = ${req.params.id_user};`, (err, results) => {
       if (err) {
@@ -61,7 +61,7 @@ module.exports = {
       }
     });
   },
-  
+
   addObject: (req, callback) => {
     db.query(`INSERT INTO Objects (x, y, object_value, scale, id_pano) VALUES (0, 0, '${req.body.object_value}', '{1, 1, 1}', ${req.body.id_pano});`, (err, results) => {
       if (err) {
@@ -120,5 +120,23 @@ module.exports = {
         callback(null, results);
       }
     });
+  },
+
+  searchTours: (req, callback) => {
+    let results = [];
+    db.query(`SELECT * FROM Tours WHERE tour_name SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, tours) => {
+      if (err) {
+        callback(err);
+      }
+      results.push(tours.rows);
+      db.query(`SELECT * FROM Tours INNER JOIN Tours ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, userTours) => {
+        if (err) {
+          callback(err);
+        }
+        results.push(userTours.rows);
+        callback(null, results);
+      });
+    });
   }
 };
+
