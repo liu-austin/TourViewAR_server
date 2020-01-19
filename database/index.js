@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { Pool, Client } = require("pg");
-const connectionLocation = `postgres://${process.env.PGUSER}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
+const connectionLocation = `postgres://${process.env.PGUSER}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}?sslmode=require?ssl=true`;
 // const connectionLocation = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
 const db = new Pool({
   user: process.env.PGUSER,
@@ -8,6 +8,7 @@ const db = new Pool({
   database: process.env.PGDATABASE,
   port: process.env.PGPORT,
   host: process.env.PGHOST,
+  sslmode: 'require',
   ssl: true
 });
 
