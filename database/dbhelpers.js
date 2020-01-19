@@ -129,7 +129,7 @@ module.exports = {
         callback(err);
       }
       results.push(tours.rows);
-      db.query(`SELECT * FROM Tours INNER JOIN Tours ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, userTours) => {
+      db.query(`SELECT * FROM Tours INNER JOIN Users ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)%})' LIMIT 5;`, (err, userTours) => {
         if (err) {
           callback(err);
         }
