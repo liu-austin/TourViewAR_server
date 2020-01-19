@@ -127,5 +127,59 @@ module.exports = {
         res.status(200).send(results);
       }
     });
+  },
+  getUrlInsertDbForObject: (req, res) => {
+    console.log(`you're in controller.getUrlInsertDbForObject`);
+    s3UploadHelper(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  getToursByUser: (req, res) => {
+    console.log(`you're in controller.getToursByUser`);
+    dbhelper.getToursByUser(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  addObject: (req, res) => {
+    console.log(`you're in controller.addObject`);
+    dbhelper.addObject(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  updateObject: (req, res) => {
+    console.log(`you're in controller.updateObject`);
+    dbhelper.updateObject(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  getObjectsByScene: (req, res) => {
+    console.log(`you're in controller.getObjectsByScene`);
+    dbhelper.getObjectsByScene(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
   }
 }
