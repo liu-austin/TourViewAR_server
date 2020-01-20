@@ -34,8 +34,7 @@ module.exports = {
             }
           });
         }
-    });
-  },
+      },
 
   addScene: (req, callback) => {
     db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
