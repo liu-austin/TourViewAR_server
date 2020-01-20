@@ -120,7 +120,8 @@ module.exports = {
   },
 
   getUser: (req, callback) => {
-    console.log(req.body);
+    console.log(req);
+    console.log(req.body)
     db.query(`SELECT * from Users WHERE username=$$${req.body.username}$$ AND pw=$$${req.body.pw}$$`, (err, results) => {
       if (err) {
         callback(err);
@@ -131,6 +132,8 @@ module.exports = {
   },
 
   createUser: (req, callback) => {
+    console.log(req)
+    console.log(req.body)
     db.query(`INSERT INTO Users (username, pw, email) VALUES ($$${req.body.username}$$, $$${req.body.pw}$$, $$${req.body.email}$$)`, (err, results) => {
       if (err) {
         callback(err);
