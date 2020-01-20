@@ -3,12 +3,8 @@ const db = require('../database/index');
 module.exports = {
 
   createNewTour: (req, callback) => {
-    db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
-      if (err) {
-        callback(err);
-      } else {
         if (req.body.location) {
-          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, latitude, longitude) VALUES ('{${results.rows[0].id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, ${req.body.latitude}, ${req.body.longitude}) RETURNING id`, (err, results) => {
+          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, latitude, longitude) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, ${req.body.latitude}, ${req.body.longitude}) RETURNING id`, (err, results) => {
             if (err) {
               callback(err);
             } else {
@@ -23,7 +19,7 @@ module.exports = {
             }
           });
         } else {
-          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name) VALUES ('{${results.rows[0].id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$) RETURNING id`, (err, results) => {
+          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$) RETURNING id`, (err, results) => {
             if (err) {
               callback(err);
             } else {
@@ -38,7 +34,6 @@ module.exports = {
             }
           });
         }
-      }
     });
   },
 
