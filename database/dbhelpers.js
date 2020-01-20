@@ -19,6 +19,7 @@ module.exports = {
             }
           });
         } else {
+          console.log(req.body)
           db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$) RETURNING id`, (err, results) => {
             if (err) {
               callback(err);
