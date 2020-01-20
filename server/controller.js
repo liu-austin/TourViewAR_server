@@ -31,6 +31,7 @@ module.exports = {
 
   createNewTour: (req, res) => {
     console.log(`you're in controller.createNewTour`);
+    console.log(req.body)
     dbhelper.createNewTour(req, (err, results) => {
       if (err) {
         console.log(err);
