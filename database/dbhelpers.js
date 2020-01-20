@@ -120,6 +120,7 @@ module.exports = {
   },
 
   getUser: (req, callback) => {
+    console.log(req.body);
     db.query(`SELECT * from Users WHERE username=$$${req.body.username}$$ AND pw=$$${req.body.pw}$$`, (err, results) => {
       if (err) {
         callback(err);
