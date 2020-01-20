@@ -33,7 +33,7 @@ const getPreSignedUrl = (bucket, id, cb) => {
                     console.log(err);
                     cb(err);
                 } else {
-                    cb(null, {url, id: id + 1});
+                    cb(null, {presignedUrl: url, id: id + 1, publicUrl});
                 }
             });
         }
