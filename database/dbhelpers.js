@@ -120,9 +120,9 @@ module.exports = {
   },
 
   getUser: (req, callback) => {
-    console.log(req);
-    console.log(req.body)
-    db.query(`SELECT * from Users WHERE username=$$${req.body.username}$$ AND pw=$$${req.body.pw}$$`, (err, results) => {
+    console.log(req.params);
+    console.log(req.query)
+    db.query(`SELECT * from Users WHERE username=$$${req.query.username}$$ AND pw=$$${req.query.pw}$$`, (err, results) => {
       if (err) {
         callback(err);
       } else {
@@ -145,12 +145,12 @@ module.exports = {
 
   searchTours: (req, callback) => {
     let results = [];
-    db.query(`SELECT * FROM Tours INNER JOIN Users On Tours.id_user = Users.id WHERE tour_name SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)}%)' LIMIT 5;`, (err, tours) => {
+    db.query(`SELECT * FROM Tours INNER JOIN Users On Tours.id_user = Users.id WHERE tour_name SIMILAR TO '(${req.query.search}%|%${req.query.search}%|${req.query.search.slice(0,1).toUpperCase() + req.query.search.slice(1)}%)' LIMIT 5;`, (err, tours) => {
       if (err) {
         callback(err);
       }
       results.push(tours.rows);
-      db.query(`SELECT * FROM Tours INNER JOIN Users ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.body.search}%|%${req.body.search}%|${req.body.search.slice(0,1).toUpperCase() + req.body.search.slice(1)}%)' LIMIT 5;`, (err, userTours) => {
+      db.query(`SELECT * FROM Tours INNER JOIN Users ON Tours.id_user = Users.id WHERE Users.username SIMILAR TO '(${req.query.search}%|%${req.query.search}%|${req.query.search.slice(0,1).toUpperCase() + req.query.search.slice(1)}%)' LIMIT 5;`, (err, userTours) => {
         if (err) {
           callback(err);
         }
