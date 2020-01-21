@@ -24,12 +24,13 @@ module.exports = {
             if (err) {
               callback(err);
             } else {
+              let tourid = results.rows[0].id;
               db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
                 if (err) {
                   callback(err);
                 } else {
                   console.log(`successful created new tour`);
-                  callback(null, results);
+                  callback(null, {tourid});
                 }
               });
             }
