@@ -75,7 +75,7 @@ module.exports = {
   },
 
   addObject: (req, callback) => {
-    db.query(`INSERT INTO Objects (x, y, object_type, object_value, scale, id_pano) VALUES (0, 0, $$${req.body.object_type}$$, $$${req.body.object_value}$$, '{1, 1, 1}', ${req.body.id_pano});`, (err, results) => {
+    db.query(`INSERT INTO Objects (x, y, object_type, object_value, scale, id_pano) VALUES (0, 0, $$${req.body.object_type}$$, $$${req.body.object_value}$$, '{1, 1, 1}', ${req.body.id_pano}) RETURNING id;`, (err, results) => {
       if (err) {
         callback(err);
       } else {
