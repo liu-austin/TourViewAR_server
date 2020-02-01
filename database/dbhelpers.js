@@ -43,12 +43,13 @@ module.exports = {
       if (err) {
         callback(err);
       } else {
+        let panoId = results.rows[0].id;
         db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}') WHERE id = ${req.body.id}`, (err, results) => {
           if (err) {
             callback(err);
           } else {
             console.log(`successful created new scene`);
-            callback(null, results);
+            callback(null, {panoId});
           }
         });
       }
