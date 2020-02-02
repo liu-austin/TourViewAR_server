@@ -67,7 +67,7 @@ const getPreSignedUrlForObject = (bucket, id, cb) => {
         } else {
             console.log('Your generated pre-signed URL is', url);
             let publicUrl = `https://${bucket}.s3-us-west-1.amazonaws.com/objects/myimage${id + 1}.jpg`;
-            db.query(`INSERT INTO Objects (x, y, object_value, scale, id_pano) VALUES (0, 0, 'https://${bucket}.s3-us-west-1.amazonaws.com/objects/myimage${id + 1}.jpg', '{1, 1, 1}', ${id})`, (err, results) => {
+            db.query(`INSERT INTO Objects (x, y, z, object_type, object_value, scale, id_pano) VALUES (0, 0, 0, 'image', 'https://${bucket}.s3-us-west-1.amazonaws.com/objects/myimage${id + 1}.jpg', '{1, 1, 1}', ${id})`, (err, results) => {
                 if (err) {
                     cb(err);
                 } else {
