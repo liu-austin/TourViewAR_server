@@ -20,14 +20,14 @@ const getCountThenUrlForObject = async (req, callback) => {
 };
 
 const getPreSignedUrl = (bucket, id, cb) => {
-    const params = {Bucket: bucket, Key: `images/myimage${id + 1}.jpg`, ContentType: 'image/jpeg'};
+    const params = {Bucket: bucket, Key: `testing/myimage${id + 1}.jpg`, ContentType: 'image/jpeg'};
     s3.getSignedUrl('putObject', params, function(err, url) {
         if (err) {
             console.log(err);
             cb(err);
         } else {
             console.log('Your generated pre-signed URL is', url);
-            let publicUrl = `https://${bucket}.s3-us-west-1.amazonaws.com/images/myimage${id + 1}.jpg`;
+            let publicUrl = `https://${bucket}.s3-us-west-1.amazonaws.com/testing/myimage${id + 1}.jpg`;
             db.query(`INSERT INTO Panos (img_url) VALUES ($$${publicUrl}$$)`, (err, results) => {
                 if (err) {
                     console.log(err);
