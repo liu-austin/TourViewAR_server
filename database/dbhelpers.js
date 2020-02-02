@@ -39,6 +39,8 @@ module.exports = {
       },
 
   addScene: (req, callback) => {
+    console.log('inside addScene dbhelper');
+    console.log(req.body);
     db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
       if (err) {
         callback(err);
