@@ -39,6 +39,7 @@ CREATE TABLE Objects (
   id serial primary key,
   x decimal,
   y decimal,
+  z decimal,
   object_type varchar(255),
   object_value varchar(255),
   scale decimal[],

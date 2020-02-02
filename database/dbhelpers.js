@@ -87,7 +87,8 @@ module.exports = {
   },
 
   updateObject: (req, callback) => {
-    db.query(`UPDATE Objects SET x=${req.body.x}, y=${req.body.y}, scale='{${req.body.scalex}, ${req.body.scaley}, ${req.body.scalez}}' where id=${req.body.id_object};`, (err, results) => {
+    console.log(req.body);
+    db.query(`UPDATE Objects SET x=${req.body.x}, y=${req.body.y} z=${req.body.z}, scale='{${req.body.scalex}, ${req.body.scaley}, ${req.body.scalez}}' where id=${req.body.id_object};`, (err, results) => {
       if (err) {
         callback(err);
       } else {
