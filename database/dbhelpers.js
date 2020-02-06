@@ -136,7 +136,7 @@ module.exports = {
         callback(err);
       } else {
         let panoId = results.rows[0].id;
-        db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}') WHERE id = ${req.body.id}`, (err, results) => {
+        db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}'), sb = array_cat(sb, '{${0}}') WHERE id = ${req.body.id}`, (err, results) => {
           if (err) {
             callback(err);
           } else {
