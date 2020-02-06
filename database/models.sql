@@ -22,7 +22,8 @@ CREATE TABLE Tours (
   tour_name varchar(255),
   skybox_photos int[],
   pano_photos int[],
-  id_user int references Users (id)
+  id_user int references Users (id),
+  sb int[]
 )
 
 CREATE TABLE Panos (
@@ -30,8 +31,14 @@ CREATE TABLE Panos (
   img_url varchar(255)
 )
 
+CREATE TABLE Sbindexes (
+  id serial primary key,
+  val int
+);
+
 CREATE TABLE Skyboxs (
   id serial primary key,
+  img_url varchar(255),
   img_index int
 )
 

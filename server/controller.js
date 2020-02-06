@@ -108,16 +108,54 @@ module.exports = {
     });
   },
 
-  // getPreSignedUrl: (req, res) => {
-  //   console.log(`you're in controller.getPreSignedUrl`)
-  //   s3UploadHelper.getPreSignedUrl(req, (err, results) => {
-  //     if (err) {
-  //       res.status(400).send(err);
-  //     } else {
-  //       res.status(200).send(results);
-  //     }
-  //   });
-  // },
+  createNewSkyboxTour: (req, res) => {
+    console.log(`you're in controller.createNewSkyboxTour`);
+    console.log(req.body)
+    dbhelper.createNewTourSkybox(req, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(404).send(`error in controller.createNewTourSkybox`);
+      } else {
+        console.log(`successful controller.createNewTourSkybox`);
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  addSkyboxScene: (req, res) => {
+    console.log(`you're in controller.addSkyboxScene`);
+    dbhelper.addSceneSkybox(req, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(404).send(`you're in controller.addSkyboxScene`);
+      } else {
+        console.log(`you're in controller.addSkyboxScene`);
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  addSkyboxImage: (req, res) => {
+    console.log(`you're in controller.addSkyboxImage`);
+    s3UploadHelper.addAdditionalSceneSkybox(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  getUrlInsertDbForSkybox: (req, res) => {
+    console.log(`you're in controller.getUrlInsertDbForSkybox`);
+    s3UploadHelper.getCountThenUrlForSkybox(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
 
   getUrlInsertDb: (req, res) => {
     console.log(`you're in controller.getUrlInsertDb`);

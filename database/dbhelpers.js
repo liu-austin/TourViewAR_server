@@ -4,7 +4,7 @@ module.exports = {
 
   createNewTour: (req, callback) => {
         if (req.body.location) {
-          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, latitude, longitude) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, ${req.body.latitude}, ${req.body.longitude}) RETURNING id`, (err, results) => {
+          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, latitude, longitude, sb) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, ${req.body.latitude}, ${req.body.longitude}, '{${0}}') RETURNING id`, (err, results) => {
             if (err) {
               callback(err);
             } else {
@@ -20,7 +20,7 @@ module.exports = {
           });
         } else {
           console.log(req.body)
-          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$) RETURNING id`, (err, results) => {
+          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, sb) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, '{${0}}') RETURNING id`, (err, results) => {
             if (err) {
               callback(err);
             } else {
@@ -36,6 +36,96 @@ module.exports = {
             }
           });
         }
+      },
+
+      createNewTourSkybox: (req, callback) => {
+          db.query(`INSERT INTO Sbindexes (val) VALUES (1) RETURNING id`, (err, result) => {
+            if (err) {
+              callback(err);
+            } else {
+              let count = results.rows[0].id;
+              db.query(`INSERT INTO Skyboxs (img_url, img_index) VALUES ($$${req.body.img_url}$$, ${count});`, (err, results) => { 
+                if (err) {
+                  callback(err);
+                } else {
+                  db.query(`INSERT INTO Tours (skybox_photos, pic_url, id_user, tour_name, sb) VALUES ('{${count}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, '{${1}}') RETURNING id`, (err, results) => {
+                    if (err) {
+                      callback(err);
+                    } else {
+                      let tourid = results.rows[0].id;
+                      db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
+                        if (err) {
+                          callback(err);
+                        } else {
+                          console.log(`successful created new tour`);
+                          callback(null, {tourid});
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+      },
+
+      addSceneSkybox: (req, callback) => {
+        console.log('inside addSceneSkybox dbhelper');
+        console.log(req.body);
+        db.query(`INSERT INTO Sbindexes (val) VALUES (1) RETURNING id`, (err, result) => {
+          if (err) {
+            callback(err);
+          } else {
+            let count = results.rows[0].id;
+            db.query(`INSERT INTO Skyboxs (img_url, img_index) VALUES ($$${req.body.img_url}$$, ${count});`, (err, results) => {
+              if (err) {
+                callback(err);
+              } else {
+                db.query(`UPDATE Tours SET skybox_photos = array_cat(skybox_photos, '{${count}}'), sb = array_cat(sb, '{${1}}') WHERE id = ${req.body.id}`, (err, results) => {
+                  if (err) {
+                    callback(err);
+                  } else {
+                    console.log(`successful created new scene`);
+                    callback(null, {count});
+                  }
+                });
+              }
+            });
+          }
+        })
+      },
+
+      addAdditionalSceneSkybox: (req, callback) => {
+        console.log('inside addAdditionalSBScene dbhelper');
+        console.log(req.body);
+        db.query(`INSERT INTO Skyboxs (img_url, img_index) VALUES ($$${req.body.img_url}$$, ${req.body.count});`, (err, results) => {
+          if (err) {
+            callback(err);
+          } else {
+              console.log(`successful created new scene`);
+              callback(null, results);
+          }
+        });
+      },
+
+      addScene1: (req, callback) => {
+        console.log('inside addScene1 dbhelper');
+        console.log(req.body);
+        db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
+          if (err) {
+            callback(err);
+          } else {
+            let panoId = results.rows[0].id;
+            db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}'), sb = array_cat(sb, '{${0}}') WHERE id = ${req.body.id}`, (err, results) => {
+              if (err) {
+                callback(err);
+              } else {
+                console.log(`successful created new scene`);
+                callback(null, {panoId});
+              }
+            });
+          }
+        });
       },
 
   addScene: (req, callback) => {
@@ -70,6 +160,16 @@ module.exports = {
 
   getScenes: (req, callback) => {
     db.query(`SELECT * from Panos WHERE id = ANY (SELECT unnest(pano_photos) from Tours WHERE id = ${req.params.id_tour})`, (err, results) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, results);
+      }
+    });
+  },
+
+  getSkyboxScene: (req, callback) => {
+    db.query(`SELECT * from Skyboxs where img_index = ${req.params.count} order by img_url`, (err, results) => {
       if (err) {
         callback(err);
       } else {

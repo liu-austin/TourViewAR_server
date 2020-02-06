@@ -8,14 +8,19 @@ const getCountThenUrl = async (req, callback) => {
     await db.query(`SELECT count(*) as total FROM Panos`)
     .then(results => getPreSignedUrl(req.params.bucket, Number(results.rows[0].total), callback))
     .catch(err => callback(err));
-
 };
-
 
 const getCountThenUrlForObject = async (req, callback) => {
     console.log(`you're in s3UploadHelper.getCountThenUrlForObject`)
     await db.query(`SELECT count(*) as total FROM Objects`)
     .then(results => getPreSignedUrlForObject(req.params.bucket, Number(results.rows[0].total), callback))
+    .catch(err => callback(err));
+};
+
+const getCountThenUrlForSkybox = async (req, callback) => {
+    console.log(`you're in s3uploadHelper.getCountThenUrlForSkybox`)
+    await db.query(`SELECT count(*) as total from Sbindexes`)
+    .then(results => getPreSignedUrlForSkybox(req.body.index, Number(results.rows[0].total), callback))
     .catch(err => callback(err));
 };
 
@@ -39,24 +44,20 @@ const getPreSignedUrl = (bucket, id, cb) => {
         }
     });
 };
-// const getPreSignedUrlForSkybox = (index, id, cb) => {
-//     const params = {Bucket: 'skyboximages', Key: `images/myimage${id}-${index}.jpg`, ContentType: 'image/jpeg'};
-//     s3.getSignedUrl('putObject', params, function(err, url) {
-//         if (err) {
-//             console.log(err);
-//             cb(err);
-//         } else {
-//             console.log('Your generated pre-signed URL is', url);
-//             db.query(`INSERT INTO Panos VALUES (${id}, 'https://panoimages.s3-us-west-1.amazonaws.com/images/myimage${id}-${index}.jpg')`, (err, results) => {
-//                 if (err) {
-//                     cb(err);
-//                 } else {
-//                     cb(null, url);
-//                 }
-//             });
-//         }
-//     });
-// };
+
+const getPreSignedUrlForSkybox = (index, id, cb) => {
+    const params = {Bucket: 'panoimages', Key: `skybox/myimage${id+1}-${index}.jpg`, ContentType: 'image/jpeg'};
+    s3.getSignedUrl('putObject', params, function(err, url) {
+        if (err) {
+            console.log(err);
+            cb(err);
+        } else {
+            console.log('Your generated pre-signed URL is', url);
+            let publicUrl = `https://panoimages.s3-us-west-1.amazonaws.com/skybox/myimage${id+1}-${index}.jpg`;
+            cb(null, {url, publicUrl});
+        }
+    });
+};
 
 const getPreSignedUrlForObject = (bucket, id, cb) => {
     const params = {Bucket: bucket, Key: `objects/myimage${id + 1}.jpg`, ContentType: 'image/jpeg'};
@@ -66,7 +67,7 @@ const getPreSignedUrlForObject = (bucket, id, cb) => {
             cb(err);
         } else {
             console.log('Your generated pre-signed URL is', url);
-            let publicUrl = `https://${bucket}.s3-us-west-1.amazonaws.com/objects/myimage${id + 1}.jpg`;
+            let publicUrl = `https://${bucket}.s3-us-west-1.amazonaws.com/objects/myimage${id+1}.jpg`;
             // db.query(`INSERT INTO Objects (x, y, z, object_type, object_value, scale, id_pano) VALUES (0, 0, 0, 'image', 'https://${bucket}.s3-us-west-1.amazonaws.com/objects/myimage${id + 1}.jpg', '{1, 1, 1}', ${id})`, (err, results) => {
                 // if (err) {
                 //     cb(err);
@@ -80,6 +81,7 @@ const getPreSignedUrlForObject = (bucket, id, cb) => {
 
 module.exports = {
                     getCountThenUrl,
-                    getCountThenUrlForObject
+                    getCountThenUrlForObject,
+                    getCountThenUrlForSkybox
                 };
 // module.exports = getPreSignedUrl;

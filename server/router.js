@@ -18,6 +18,18 @@ router
   .get(controller.getToursByUser);
 
 router
+  .route("/skyboxtours")
+  .post(controller.createNewSkyboxTour);
+
+router
+  .route("/skyboxscenes")
+  .post(controller.addSkyboxScene);
+
+router
+  .route("/skyboximage")
+  .post(controller.addSkyboxImage);
+
+router
   .route("/scenes")
   .post(controller.addScene);
 
@@ -47,6 +59,10 @@ router
 router
   .route('/getpresignedurl/:bucket')
   .get(controller.getUrlInsertDb);
+
+router
+  .route('/getpresignedurlforskybox/:bucket')
+  .get(controller.getUrlInsertDbForSkybox);
 
 router
   .route('/getpresignedurlforobject/:bucket')
