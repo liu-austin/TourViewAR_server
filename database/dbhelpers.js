@@ -8,7 +8,7 @@ module.exports = {
             if (err) {
               callback(err);
             } else {
-              db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
+              db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}') where id = ${req.body.id_user};`, (err, results) => {
                 if (err) {
                   callback(err);
                 } else {
@@ -25,7 +25,7 @@ module.exports = {
               callback(err);
             } else {
               let tourid = results.rows[0].id;
-              db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
+              db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}') where id = ${req.body.id_user};`, (err, results) => {
                 if (err) {
                   callback(err);
                 } else {
@@ -53,7 +53,7 @@ module.exports = {
                       callback(err);
                     } else {
                       let tourid = results.rows[0].id;
-                      db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}');`, (err, results) => {
+                      db.query(`UPDATE Users SET created_tours = array_cat(created_tours, '{${results.rows[0].id}}') where id = ${req.body.id_user};`, (err, results) => {
                         if (err) {
                           callback(err);
                         } else {
