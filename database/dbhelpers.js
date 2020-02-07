@@ -243,14 +243,14 @@ module.exports = {
   },
 
   searchTours: (req, callback) => {
-    let results = [];
+    // let results = [];
     console.log(req.query)
     // SELECT * FROM Tours INNER JOIN Users On Tours.id_user = Users.id WHERE tour_name SIMILAR TO '(${req.query.search}%|%${req.query.search}%|${req.query.search.slice(0,1).toUpperCase() + req.query.search.slice(1)}%)' LIMIT 5;
     db.query(`SELECT * FROM Tours WHERE tour_name SIMILAR TO '(${req.query.search}%|%${req.query.search}%|${req.query.search.slice(0,1).toUpperCase() + req.query.search.slice(1)}%)' LIMIT 5;`, (err, tours) => {
       if (err) {
         callback(err);
       }
-        callback(null, results);
+        callback(null, tours.rows);
       });
   }
 };
