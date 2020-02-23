@@ -54,7 +54,7 @@ const getPreSignedUrlForSkybox = (index, id, cb) => {
         } else {
             console.log('Your generated pre-signed URL is', url);
             let publicUrl = `https://panoimages.s3-us-west-1.amazonaws.com/skybox/myimage${id+1}-${index}.jpg`;
-            cb(null, {url, publicUrl});
+            cb(null, {url, publicUrl, id: id + 1});
         }
     });
 };
