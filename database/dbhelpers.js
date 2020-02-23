@@ -108,25 +108,25 @@ module.exports = {
         });
       },
 
-      addScene1: (req, callback) => {
-        console.log('inside addScene1 dbhelper');
-        console.log(req.body);
-        db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
-          if (err) {
-            callback(err);
-          } else {
-            let panoId = results.rows[0].id;
-            db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}'), sb = array_cat(sb, '{${0}}') WHERE id = ${req.body.id}`, (err, results) => {
-              if (err) {
-                callback(err);
-              } else {
-                console.log(`successful created new scene`);
-                callback(null, {panoId});
-              }
-            });
-          }
-        });
-      },
+      // addScene1: (req, callback) => {
+      //   console.log('inside addScene1 dbhelper');
+      //   console.log(req.body);
+      //   db.query(`INSERT INTO Panos (img_url) VALUES ($$${req.body.img_url}$$) RETURNING id;`, (err, results) => {
+      //     if (err) {
+      //       callback(err);
+      //     } else {
+      //       let panoId = results.rows[0].id;
+      //       db.query(`UPDATE Tours SET pano_photos = array_cat(pano_photos, '{${results.rows[0].id}}'), sb = array_cat(sb, '{${0}}') WHERE id = ${req.body.id}`, (err, results) => {
+      //         if (err) {
+      //           callback(err);
+      //         } else {
+      //           console.log(`successful created new scene`);
+      //           callback(null, {panoId});
+      //         }
+      //       });
+      //     }
+      //   });
+      // },
 
   addScene: (req, callback) => {
     console.log('inside addScene dbhelper');
@@ -188,6 +188,16 @@ module.exports = {
     });
   },
 
+  addObject1: (req, callback) => {
+    db.query(`INSERT INTO Objects (x, y, z, object_type, object_value, scale, id_skybox) VALUES (0, 0, 0, $$${req.body.object_type}$$, $$${req.body.object_value}$$, '{1, 1, 1}', ${req.body.id_skybox}) RETURNING id;`, (err, results) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, results);
+      }
+    });
+  },
+
   updateObject: (req, callback) => {
     console.log(req.body);
     db.query(`UPDATE Objects SET x=${Number(req.body.x)}, y=${Number(req.body.y)}, z=${Number(req.body.z)}, scale='{${req.body.scalex}, ${req.body.scaley}, ${req.body.scalez}}' where id=${req.body.id_object};`, (err, results) => {
@@ -202,6 +212,16 @@ module.exports = {
 
   getObjectsByScene: (req, callback) => {
     db.query(`SELECT * from Objects Where id_pano=${req.params.id_pano}`, (err, results) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, results);
+      }
+    });
+  },
+
+  getObjectsByScene1: (req, callback) => {
+    db.query(`SELECT * from Objects Where id_skybox=${req.params.id_skybox}`, (err, results) => {
       if (err) {
         callback(err);
       } else {

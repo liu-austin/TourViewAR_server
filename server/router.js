@@ -22,7 +22,7 @@ router
   .post(controller.createNewSkyboxTour);
 
 router
-  .route("/skyboxscenes")
+  .route("/skyboxscene")
   .post(controller.addSkyboxScene);
 
 router
@@ -34,6 +34,10 @@ router
   .post(controller.addScene);
 
 router
+  .route("/getskybox")
+  .get(controller.getSkyboxScene);
+
+router
   .route("/scenes/:id_tour")
   .get(controller.getScenes)
 
@@ -41,10 +45,18 @@ router
   .route("/objects/:id_pano")
   .get(controller.getObjectsByScene);
 
+router  
+  .route("/objectsskybox/:id_pano")
+  .get(controller.getObjectsByScene1);
+
 router
   .route("/object")
   .post(controller.addObject)
   .put(controller.updateObject);
+
+router
+  .route("/objectskybox")
+  .post(controller.addObject1)
 
 router
   .route("/tour/:id")

@@ -56,6 +56,19 @@ module.exports = {
     });
   },
 
+  getSkyboxScene: (req, res) => {
+    console.log(`you're in controller.getSkyboxScene`);
+    dbhelper.getSkyboxScene(req, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(404).send(`error in controller.getSkyboxScene`);
+      } else {
+        console.log(`successful controller.getSkyboxScene`);
+        res.status(200).send(results);
+      }
+    });
+  },
+
   addScene: (req, res) => {
     console.log(`you're in controller.addScene`);
     dbhelper.addScene(req, (err, results) => {
@@ -200,6 +213,17 @@ module.exports = {
     });
   },
 
+  addObject1: (req, res) => {
+    console.log(`you're in controller.addObject1`);
+    dbhelper.addObject1(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
   updateObject: (req, res) => {
     console.log(`you're in controller.updateObject`);
     dbhelper.updateObject(req, (err, results) => {
@@ -214,6 +238,17 @@ module.exports = {
   getObjectsByScene: (req, res) => {
     console.log(`you're in controller.getObjectsByScene`);
     dbhelper.getObjectsByScene(req, (err, results) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  },
+
+  getObjectsByScene1: (req, res) => {
+    console.log(`you're in controller.getObjectsByScene1`);
+    dbhelper.getObjectsByScene1(req, (err, results) => {
       if (err) {
         res.status(400).send(err);
       } else {
