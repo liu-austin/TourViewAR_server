@@ -46,7 +46,7 @@ router
   .get(controller.getObjectsByScene);
 
 router  
-  .route("/objectsskybox/:id_pano")
+  .route("/objectsskybox/:id_skybox")
   .get(controller.getObjectsByScene1);
 
 router
