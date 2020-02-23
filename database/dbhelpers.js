@@ -179,7 +179,7 @@ module.exports = {
   },
 
   getSkyboxScene: (req, callback) => {
-    db.query(`SELECT * from Skyboxs where img_index = ${req.params.count} order by img_url`, (err, results) => {
+    db.query(`SELECT * from Skyboxs where img_index = ${req.body.count} order by img_url`, (err, results) => {
       if (err) {
         callback(err);
       } else {
