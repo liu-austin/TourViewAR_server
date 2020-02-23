@@ -92,7 +92,7 @@ module.exports = {
               }
             });
           }
-        })
+        });
       },
 
       addAdditionalSceneSkybox: (req, callback) => {
@@ -150,6 +150,16 @@ module.exports = {
 
   getToursByUser: (req, callback) => {
     db.query(`SELECT * FROM Tours WHERE id_user = ${req.params.id_user};`, (err, results) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, results);
+      }
+    });
+  },
+
+  getTourById: (req, callback) => {
+    db.query(`SELECT * FROM Tours WHERE id= ${req.params.id};`, (err, results) => {
       if (err) {
         callback(err);
       } else {
