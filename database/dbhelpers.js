@@ -4,7 +4,7 @@ module.exports = {
 
   createNewTour: (req, callback) => {
         if (req.body.location) {
-          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, latitude, longitude, sb) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, ${req.body.latitude}, ${req.body.longitude}, '{${0}}') RETURNING id`, (err, results) => {
+          db.query(`INSERT INTO Tours (pano_photos, skybox_photos, pic_url, id_user, tour_name, latitude, longitude, sb) VALUES ('{${req.body.id}}', '{}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, ${req.body.latitude}, ${req.body.longitude}, '{${0}}') RETURNING id`, (err, results) => {
             if (err) {
               callback(err);
             } else {
@@ -20,7 +20,7 @@ module.exports = {
           });
         } else {
           console.log(req.body)
-          db.query(`INSERT INTO Tours (pano_photos, pic_url, id_user, tour_name, sb) VALUES ('{${req.body.id}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, '{${0}}') RETURNING id`, (err, results) => {
+          db.query(`INSERT INTO Tours (pano_photos, skybox_photos, pic_url, id_user, tour_name, sb) VALUES ('{${req.body.id}}', '{}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, '{${0}}') RETURNING id`, (err, results) => {
             if (err) {
               callback(err);
             } else {
@@ -48,7 +48,7 @@ module.exports = {
                 if (err) {
                   callback(err);
                 } else {
-                  db.query(`INSERT INTO Tours (skybox_photos, pic_url, id_user, tour_name, sb) VALUES ('{${count}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, '{${1}}') RETURNING id`, (err, results) => {
+                  db.query(`INSERT INTO Tours (pano_photos, skybox_photos, pic_url, id_user, tour_name, sb) VALUES ('{}', '{${count}}', $$${req.body.img_url}$$, ${req.body.id_user}, $$${req.body.tour_name}$$, '{${1}}') RETURNING id`, (err, results) => {
                     if (err) {
                       callback(err);
                     } else {
