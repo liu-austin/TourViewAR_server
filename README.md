@@ -11,7 +11,7 @@ The backend server was built with Node.js, Express, PostgreSQL, and deployed usi
 ## Installation
 
 ```sh
-git clone https://github.com/liu-austin/TourViewARServer_alpha
+git clone https://github.com/liu-austin/TourViewAR_server.git
 cd tourViewARServer_alpha
 npm install
 npm start
